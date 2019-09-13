@@ -8,10 +8,6 @@ const white = "#ffffff"
 const colorset = [[black,white],[white,black]];
 
 class Time extends React.Component{
-	constructor(props){
-		super(props);
-	}
-
 	componentDidMount(){
 		this.resizeClock();
 		window.addEventListener("resize",this.resizeClock);
@@ -26,9 +22,7 @@ class Time extends React.Component{
 		return(
 			<div className="Clock" id="Clock">
 				<div className="Time" id="Time">
-					<div>
-						<span className="clockChar">{this.props.time.format('HH')}{this.props.time.format('mm')}{this.props.time.format('ss')}</span>
-					</div>
+					<div className="clockChar">{this.props.time.format('HHmmss')}</div>
 				</div>
 				<div className="Date" id="Date">
 					<div className="clockChar">{this.props.time.format('DDMMMYYYY ddd')}</div>
@@ -38,27 +32,22 @@ class Time extends React.Component{
 	}	
 }
 
-class Background extends React.Component{
-	render(){
-		return(
-			<div id="clockBackground"></div>
-		)
-	}
-}
-
 class Clock extends React.Component{
 	constructor(props){
 		super(props);
-		if (this.props.match.params.LimitCut) this.LimitCut = this.props.match.params.LimitCut;
+		var time;
+		if (this.props.time) time = this.props.time;
+		else time = moment(Date.now());
+		if (this.props.match.params.LimitCut) this.LimitCut = parseInt(this.props.match.params.LimitCut);
 		else this.LimitCut = 0;
 		this.renewSecond = 5;
-		this.state = {time:moment(Date.now()),colorsetIndex:0};
+		this.state = {time:time,colorsetIndex:0,lastSecond:""};
 	}
 	componentDidMount(){
-		if (this.LimitCut == 1) this.initColor();
+		if (this.LimitCut === 1) this.initColor();
 		this.interval = setInterval(
 			() => this.renewTime(),
-			1000
+			500
 		);
 	}
 	
@@ -67,29 +56,29 @@ class Clock extends React.Component{
 	}
 
 	initColor(){
-		document.getElementById('clockBackground').style.backgroundColor=colorset[0][0];
+		document.getElementById('Clock').style.backgroundColor=colorset[0][0];
 		var clockCharElements = document.getElementsByClassName('clockChar');
 		for (var i = 0; i < clockCharElements.length; i++) clockCharElements[i].style.color=colorset[0][1];	
 	}
 	
 	renewTime(){
-		const currentSecond = new Date(Date.now()).getSeconds();
-		if (this.LimitCut == 1 && currentSecond % this.renewSecond === 0){
+		const currentSecond = parseInt(this.state.time.format('ss'));
+		//Change Background color and font color per (renewSecond)
+		//Not to change if LimitCut = 0 or not exist
+		if (this.LimitCut === 1 && currentSecond % this.renewSecond === 0 && currentSecond !== this.state.lastSecond){
 			const colorsetIndex = (this.state.colorsetIndex+1)%(colorset.length);
 			this.setState({colorsetIndex:colorsetIndex});
-			document.getElementById('clockBackground').style.backgroundColor=colorset[colorsetIndex][0];
+			document.getElementById('Clock').style.backgroundColor=colorset[colorsetIndex][0];
 			var clockCharElements = document.getElementsByClassName('clockChar');
 			for (var i = 0; i < clockCharElements.length; i++) clockCharElements[i].style.color=colorset[colorsetIndex][1];
 		}
-		this.setState({time:moment(Date.now())});
+		if (this.props.time) this.setState({time:this.props.time,lastSecond:currentSecond});
+		else this.setState({time:moment(Date.now()),lastSecond:currentSecond});
 	}
 
 	render(){
 		return(
-			<div>
-				<Background />
-				<Time time={this.state.time}/>
-			</div>
+			<Time time={this.state.time}/>
 		)
 	}
 }
