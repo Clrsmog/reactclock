@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Nova+Square');
+
 .Clock{
 	height:100%;
 	width:100%;
@@ -6,12 +8,13 @@
 }
 .Time{
 	margin-top:10%;
-	height:50%;
+	text-align:center;
 }
 .Time > div{
-	width:auto;
-	margin:5% auto 0 auto;
-	text-align:center;
+	margin:0 auto 0 auto;
+	width:65%;
+	display:inline-block;
+	text-align:left
 }
 .Date > div{
 	width:auto;

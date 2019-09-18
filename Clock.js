@@ -47,7 +47,7 @@ class Clock extends React.Component{
 		if (this.LimitCut === 1) this.initColor();
 		this.interval = setInterval(
 			() => this.renewTime(),
-			500
+			100
 		);
 	}
 	
