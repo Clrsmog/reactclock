@@ -16,16 +16,26 @@ class Time extends React.Component{
 	resizeClock(){
 		document.getElementById('Time').style.fontSize = String((document.getElementById('Clock').clientWidth/5))+"px";
 		document.getElementById('Date').style.fontSize = String((document.getElementById('Clock').clientWidth/25))+"px";
+		document.getElementById('Time').getElementsByTagName('div')[0].style.width = String((document.getElementById('Clock').clientWidth/5*4))+"px";
 	}
 	
 	render(){
 		return(
 			<div className="Clock" id="Clock">
-				<div className="Time" id="Time">
-					<div className="clockChar">{this.props.time.format('HHmmss')}</div>
-				</div>
-				<div className="Date" id="Date">
-					<div className="clockChar">{this.props.time.format('DDMMMYYYY ddd')}</div>
+				<div className="DateTimeContainer" id="DateTimeContainer">
+					<div className="Time" id="Time">
+						<div className="clockChar">
+							<span>{this.props.time.format('HH').charAt(0)}</span>
+							<span>{this.props.time.format('HH').charAt(1)}</span>
+							<span>{this.props.time.format('mm').charAt(0)}</span>
+							<span>{this.props.time.format('mm').charAt(1)}</span>
+							<span>{this.props.time.format('ss').charAt(0)}</span>
+							<span>{this.props.time.format('ss').charAt(1)}</span>
+						</div>
+					</div>
+					<div className="Date" id="Date">
+						<div className="clockChar">{this.props.time.format('DDMMMYYYY ddd')}</div>
+					</div>
 				</div>
 			</div>
 		)
@@ -47,7 +57,7 @@ class Clock extends React.Component{
 		if (this.LimitCut === 1) this.initColor();
 		this.interval = setInterval(
 			() => this.renewTime(),
-			100
+			50
 		);
 	}
 	
@@ -65,7 +75,7 @@ class Clock extends React.Component{
 		const currentSecond = parseInt(this.state.time.format('ss'));
 		//Change Background color and font color per (renewSecond)
 		//Not to change if LimitCut = 0 or not exist
-		if (this.LimitCut === 1 && currentSecond % this.renewSecond === 0 && currentSecond !== this.state.lastSecond){
+		if (this.LimitCut === 1) if (currentSecond % this.renewSecond === 0 && currentSecond !== this.state.lastSecond){
 			const colorsetIndex = (this.state.colorsetIndex+1)%(colorset.length);
 			this.setState({colorsetIndex:colorsetIndex});
 			document.getElementById('Clock').style.backgroundColor=colorset[colorsetIndex][0];

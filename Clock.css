@@ -6,15 +6,18 @@
 	position:fixed;
 	font-family: "Nova Square";
 }
-.Time{
-	margin-top:10%;
-	text-align:center;
+.DateTimeContainer{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	height:60%;
 }
-.Time > div{
-	margin:0 auto 0 auto;
-	width:65%;
+.Time > .clockChar > span{
 	display:inline-block;
-	text-align:left
+	width: 16.6%;
+	text-align:right;
 }
 .Date > div{
 	width:auto;
